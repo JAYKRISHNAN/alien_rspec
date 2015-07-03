@@ -1,14 +1,21 @@
-require_relative 'alien.rb'
 
 class AlienDataExporter
 
-	def self.fetch_plugins(absolute_path)
-		return (Dir.entries(absolute_path).select { |entry|  !File.directory?(entry)})
+	def self.fetch_plugins(path)
+		return (Dir.entries(path).select { |entry|  !File.directory?(entry)})
 	end
+
+	def AlienDataExporter.import_plugins(plugins) 
+		plugins.each do |plugin| 													  
+			            require_relative 'plugins/'+ plugin
+			         end
+	end
+
 
     def  self.display_formats(plugins) 
 		plugins.each_with_index do |plugin,index|
-			puts "#{index+1}.#{plugin.capitalize.tr('_',' ').slice(0..-13)}"
+			class_name = AlienDataExporter.get_class_name("plugins/#{plugin}")
+			puts "#{index+1}.  " + ((Object.const_get(class_name)).format_type)
 		end
 	end
 
@@ -21,22 +28,17 @@ class AlienDataExporter
 		return choice
 	end
 
-	def self.import_plugin(plugin_file_name)
-		require_relative 'plugins/' + plugin_file_name
-	end
+	
 
-	def self.get_class_name(plugin_file_name)
-		class_name = ''
-		plugin_file_name.slice(0..-4).split('_').each{|x| class_name << x.capitalize}
-		return class_name
+	def self.get_class_name(path_to_plugin_file)
+		IO.read(path_to_plugin_file).scan(/\bclass.\K\S+/).first
 	end
 
 	def self.export_data(alien_data)
-
-		plugins = (AlienDataExporter.fetch_plugins('/home/joker/alien_rspec/plugins/'))[0..-2]
+		plugins = (AlienDataExporter.fetch_plugins('plugins/'))[0..-2]
+		AlienDataExporter.import_plugins(plugins)
 		choice = AlienDataExporter.choose_format(plugins)   
-		AlienDataExporter.import_plugin(plugins[choice-1])
-		class_name = AlienDataExporter.get_class_name(plugins[choice-1])
+		class_name = AlienDataExporter.get_class_name("plugins/#{plugins[choice-1]}")
 		exporting_class = Object.const_get(class_name)
 		exporting_class.export(alien_data)
 	end	

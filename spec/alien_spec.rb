@@ -5,9 +5,7 @@ require_relative '../alien_problem.rb'
 require_relative '../alien_data_exporter.rb'
 require_relative '../plugins/plugin_template/exporter.rb'
 require_relative '../plugins/pdf_exporter.rb'
-
-
-
+require_relative '../plugins/plain_text_exporter.rb'
 
 
 
@@ -61,18 +59,30 @@ describe 'alien data Exporter' do
 		it 'returns empty array if invoked with a path to empty directory'do
 			expect(AlienDataExporter.fetch_plugins('/home/joker/alien_rspec/spec/dummy_plugins2/')).to eql []
 		end
+	end 
+
+	it 'gets class name from file name ' do
+		expect(AlienDataExporter.get_class_name('/home/joker/alien_rspec/spec/dummy_plugins1/plain_text_exporter.rb')).to eql 'PlainTextExporter'
 	end
 
-
+	it 'imports  all  modules'
 	it 'displays all available formats'
 	it 'inputs user choice'
-	it 'imports chosen module'
 
-	it 'gets name of class from file name' do
-		expect(AlienDataExporter.get_class_name('csv_exporter.rb')).to eql 'CsvExporter' 
+	
+
+	describe 'export data' do
+
+		
+		it 'invokes method to import all plugin files from plugins folder' do	
+			expect(AlienDataExporter).to receive(:import_plugins).with(['plain_text_exporter.rb','pdf_exporter.rb'])
+		end
+		
+		after (:each) do
+			alien_data = {'Code Name' => 'Jack','Blood Colour' => 'Blue','Number Of Antennas' => 2,'Number Of legs' => 3,'Home Planet' => 'Pluto'}
+			AlienDataExporter.export_data(alien_data)
+		end
 	end
-
-
 end
 
 
@@ -83,16 +93,29 @@ describe 'exporter' do
 	it 'has a method export' do
 		expect(Exporter).to respond_to(:export)
 	end
+	it 'has a method type format' do
+		expect(Exporter).to respond_to(:format_type)
+	end
 end
 
 
 describe 'pdf exporter' do
-	it 'exports to pdf format'
+
+	it 'exports to pdf format' do
+		alien_data = {'Code Name' => 'Jack','Blood Colour' => 'Blue','Number Of Antennas' => 2,'Number Of legs' => 3,'Home Planet' => 'Pluto'}
+		PdfExporter.export(alien_data)
+		expect(Dir.entries('outputs/')).to include('Jack.pdf')
+
+	end
 end
 
 
 describe 'plain text exporter' do
-	it 'exports to plain text format'
+	it 'exports to plain text format' do
+		alien_data = {'Code Name' => 'Jack','Blood Colour' => 'Blue','Number Of Antennas' => 2,'Number Of legs' => 3,'Home Planet' => 'Pluto'}
+		PlainTextExporter.export(alien_data)
+		expect(Dir.entries('outputs/')).to include('Jack.txt')
+	end
 end
 
 
