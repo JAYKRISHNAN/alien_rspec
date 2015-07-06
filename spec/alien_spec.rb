@@ -54,15 +54,15 @@ describe 'alien data Exporter' do
 
   describe 'fetch plugins' do
     it 'fetches all plugins in plugins folder as array' do
-      expect(AlienDataExporter.fetch_plugins('/home/joker/alien_rspec/spec/dummy_plugins1/')).to eql ['plain_text_exporter.rb','pdf_exporter.rb']
+      expect(AlienDataExporter.fetch_plugins('spec/fixtures/dummy_plugins1/')).to eql ['plain_text_exporter.rb','pdf_exporter.rb']
     end
     it 'returns empty array if invoked with a path to empty directory'do
-      expect(AlienDataExporter.fetch_plugins('/home/joker/alien_rspec/spec/dummy_plugins2/')).to eql []
+      expect(AlienDataExporter.fetch_plugins('spec/fixtures/dummy_plugins2/')).to eql []
     end
   end 
 
   it 'gets class name from file name ' do
-    expect(AlienDataExporter.get_class_name('/home/joker/alien_rspec/spec/dummy_plugins1/plain_text_exporter.rb')).to eql 'PlainTextExporter'
+    expect(AlienDataExporter.get_class_name('spec/fixtures/dummy_plugins1/plain_text_exporter.rb')).to eql 'PlainTextExporter'
   end
 
 
