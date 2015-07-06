@@ -2,13 +2,13 @@
 class AlienDataExporter
 
 	def self.fetch_plugins(path)
-		return (Dir.entries(path).select { |entry|  !File.directory?(entry)})
+		(Dir.entries(path).select { |entry|  !File.directory?(entry)})
 	end
 
 	def AlienDataExporter.import_plugins(plugins) 
 		plugins.each do |plugin| 													  
-			            require_relative 'plugins/'+ plugin
-			         end
+			require_relative 'plugins/'+ plugin
+		end
 	end
 
 
@@ -25,7 +25,7 @@ class AlienDataExporter
 		AlienDataExporter.display_formats(plugins) 
 		puts 'Enter Choice : '
 		choice = STDIN.gets.chomp.to_i
-		return choice
+		choice
 	end
 
 	

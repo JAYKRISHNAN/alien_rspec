@@ -13,6 +13,6 @@ class PdfExporter < Exporter
 	end
 
 	def self.format_type
-		return 'PDF'
+		'PDF'
 	end
 end

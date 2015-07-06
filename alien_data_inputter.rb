@@ -7,6 +7,6 @@ class AlienDataInputter
 			puts "Enter #{property} : "
 			alien_data[property]= STDIN.gets.chomp
 		end
-		return alien_data	
+		alien_data	
 	end
 end
