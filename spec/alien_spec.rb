@@ -99,7 +99,10 @@ describe 'pdf exporter' do
   it 'exports to pdf format' do
     alien_data = {'Code Name' => 'Jack','Blood Colour' => 'Blue','Number Of Antennas' => 2,'Number Of legs' => 3,'Home Planet' => 'Pluto'}
     PdfExporter.export(alien_data)
-    expect(Dir.entries('outputs/')).to include('Jack.pdf')
+    expect(File.exist?('outputs/Jack.pdf')).to be true
+    Dir.chdir('outputs/')
+    File.delete('Jack.pdf')
+    Dir.chdir('..')
 
   end
 end
@@ -109,7 +112,10 @@ describe 'plain text exporter' do
   it 'exports to plain text format' do
     alien_data = {'Code Name' => 'Jack','Blood Colour' => 'Blue','Number Of Antennas' => 2,'Number Of legs' => 3,'Home Planet' => 'Pluto'}
     PlainTextExporter.export(alien_data)
-    expect(Dir.entries('outputs/')).to include('Jack.txt')
+    expect(File.exist?('outputs/Jack.txt')).to be true
+    Dir.chdir('outputs/')
+    File.delete('Jack.txt')
+    Dir.chdir('..')
   end
 end
 
